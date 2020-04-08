@@ -1,4 +1,4 @@
-package proxy;
+package service;
 
 
 import entity.RpcRequest;
@@ -47,9 +47,21 @@ public class ProcessorHandler implements Runnable{
     }
 
 
-    private Object invoke(RpcRequest request) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        Class clazz = Class.forName(request.getClassName());
-        Method method = clazz.getMethod(request.getClassName(),request.getTypes());
-        return method.invoke(service,request.getParam());
+    private Object invoke(RpcRequest request)  {
+        Class clazz = null;
+        try {
+            clazz = Class.forName(request.getClassName());
+            Method method = clazz.getMethod(request.getMethodName(),request.getTypes());
+            return method.invoke(service,request.getParam());
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
